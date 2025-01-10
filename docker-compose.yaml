@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  # 첫 번째 MySQL 컨테이너
+  mysql-primary:
+    image: mysql:latest
+    container_name: mysql-container-primary
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Seoul # 시간대 설정
+    ports:
+      - "${DB_PORT}:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # UTF-8 인코딩 설정
+    volumes:
+      - mysql-primary-data:/var/lib/mysql
+
+  # 두 번째 MySQL 컨테이너
+  mysql-secondary:
+    image: mysql:latest
+    container_name: mysql-container-secondary
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_SECONDARY}
+      MYSQL_DATABASE: ${DB_NAME_SECONDARY}
+      MYSQL_USER: ${DB_USER_SECONDARY}
+      MYSQL_PASSWORD: ${DB_PASSWORD_SECONDARY}
+      TZ: Asia/Seoul # 시간대 설정
+    ports:
+      - "${DB_PORT_SECONDARY}:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # UTF-8 인코딩 설정
+    volumes:
+      - mysql-secondary-data:/var/lib/mysql
+
+volumes:
+  mysql-primary-data:
+    driver: local
+  mysql-secondary-data:
+    driver: local
